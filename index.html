@@ -4,162 +4,201 @@
   <meta charset="UTF-8">
   <title>Chord Lookup App</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        background-color: #121212;
-        color: #e0e0e0;
-    }
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
 
-    .input-group {
-        margin-bottom: 10px;
-    }
+.input-group {
+    margin: 10px 20px 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
 
-    .container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin-top: 20px;
-    }
+input[type="text"] {
+    background-color: #2c2c2c;
+    color: #f0f0f0;
+    border: 1px solid #555;
+    padding: 12px;
+    border-radius: 4px;
+    flex: 1 1 100%;
+    font-size: 16px;
+    min-width: 0;
+}
 
-    .info-box {
-        border: 1px solid #333;
-        border-radius: 8px;
-        padding: 12px;
-        width: 300px;
-        box-sizing: border-box;
-        background-color: #1e1e1e;
-        font-family: Arial, sans-serif;
-        position: relative;
-        cursor: move;
-        color: #e0e0e0;
-    }
+.button-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    box-sizing:border-box;
+    margin: 12px 0 0 0;
+}
 
-    .info-box h4 {
-        margin: 4px 0;
-    }
+#submitButton {
+    flex: 4;
+    padding: 12px 16px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
 
-    .info-box.dragging {
-        opacity: 0.5;
-    }
+#submitButton:hover {
+    background-color: #1565c0;
+}
 
-    .voicings {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        margin-top: 8px;
-    }
+#clear-btn {
+    flex: 1;
+    padding: 12px 16px;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
 
-    .voicing-column {
-        display: flex;
-        flex-direction: column;
-        background: #2a2e42;
-        padding: 4px;
-        border-radius: 4px;
-    }
+#clear-btn:hover {
+    background-color: #b71c1c;
+}
 
-    .voicing-column div {
-        padding: 2px 4px;
-        border-bottom: 1px solid #444;
-        color: #cfd8dc;
-    }
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    padding: 20px;
+}
 
-    .scale-row {
-        display: flex;
-        overflow-x: auto;
-        gap: 6px;
-        margin-top: 8px;
-        padding-bottom: 4px;
-    }
+.info-box {
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #1e1e1e;
+    position: relative;
+    color: #e0e0e0;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 20px;
+    line-height: 1.5;
+}
 
-    .scale-note {
-        background: #388e3c;
-        color: #ffffff;
-        padding: 4px 6px;
-        border-radius: 3px;
-        white-space: nowrap;
-    }
+.info-box.dragging {
+    opacity: 0.5;
+}
 
-    .label {
-        font-weight: bold;
-        color: #90caf9;
-    }
+.info-seq-number {
+    position: absolute;
+    bottom: 6px;
+    right: 8px;
+    font-size: 16px;
+    color: #888;
+    user-select: none;
+    pointer-events: none;
+}
 
-    #clear-btn {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        padding: 8px 12px;
-        background-color: #e53935;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+.voicings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
 
-    #clear-btn:hover {
-        background-color: #b71c1c;
-    }
+.voicing-column {
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    min-width: 0; /* prevent overflow in flex container */
+}
 
-    .delete-btn {
-        position: absolute;
-        top: 6px;
-        right: 8px;
-        background: none;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-        color: #ef5350;
-    }
+.voicing-column.fit-bg {
+    background: #2a2e42;
+    width: fit-content;
+    flex: 0 0 auto;
+}
 
-    input[type="text"] {
-        background-color: #2c2c2c;
-        color: #f0f0f0;
-        border: 1px solid #555;
-        padding: 6px;
-        border-radius: 4px;
-    }
+.voicing-column.alt-bg {
+    background-color: #d2691e;
+    color: #ffffff;
+    flex: 1 1 0%;
+}
 
-    input[type="checkbox"] {
-        accent-color: #90caf9;
-    }
+.voicing-column div {
+    padding: 4px 6px;
+    border-bottom: 1px solid #444;
+    color: #cfd8dc;
+    font-size: 24px;
+}
 
-    label {
-        color: #b0bec5;
-    }
+.scale-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
 
-    #submitButton {
-        padding: 6px 12px;
-        margin-left: 6px;
-        background-color: #1976d2;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+.scale-note {
+    background: #388e3c;
+    color: #ffffff;
+    padding: 5px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    font-size: 24px;
+}
 
-    #submitButton:hover {
-        background-color: #1565c0;
-    }
+.label {
+    font-weight: bold;
+    color: #90caf9;
+    margin-top: 8px;
+}
 
-    .voicing-column.alt-bg {
-        background-color: #d2691e;
-        color: #ffffff;
-    }
+.delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #ef5350;
+}
+
+input[type="checkbox"] {
+    accent-color: #90caf9;
+}
+
+label {
+    color: #b0bec5;
+}
 </style>
 </head>
 <body>
   <div class="input-group">
-    <label for="textInput">Enter text:</label>
+    <label for="textInput">Enter chord name:</label>
     <input type="text" id="textInput" />
-    <button id="submitButton">Submit</button>
+    <div class="button-row">
+        <button id="submitButton">Submit</button>
+        <button id="clear-btn">Clear Info Boxes</button>
+    </div>
   </div>
 
   <!-- <div class="input-group">
     <input type="checkbox" id="realTimeCheckbox" />
     <label for="realTimeCheckbox">Real Time</label>
   </div> -->
-
-  <button id="clear-btn">Clear Info Boxes</button>
 
   <div class="container" id="info-container">
   <!-- Info boxes will be inserted here -->

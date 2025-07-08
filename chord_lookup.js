@@ -475,6 +475,8 @@ const generateChordInfo = function(chordName, major = true) {
 //console.log(test);
 
 ////////// Mostly generated code below
+let infoBoxCounter = 0;
+
 const input = document.getElementById('textInput');
 const submitBtn = document.getElementById('submitButton');
 //const realTimeCheckbox = document.getElementById('realTimeCheckbox');
@@ -507,7 +509,8 @@ submitBtn.addEventListener('click', () => {
 function createInfoBox(info) {
     const box = document.createElement('div');
     box.className = 'info-box';
-    box.setAttribute('draggable', 'true');
+    //box.setAttribute('draggable', 'true');
+    infoBoxCounter++;
 
     // Add inner HTML
     box.innerHTML = `
@@ -520,7 +523,7 @@ function createInfoBox(info) {
         <div class="label">Voicings:</div>
         <div class="voicings">
             ${info.voicings.map((voicing, index) => `
-            <div class="voicing-column${index % 2 === 1 ? ' alt-bg' : ''}">
+            <div class="voicing-column${index % 2 === 1 ? ' alt-bg' : ' fit-bg'}">
                 ${voicing.map(note => `<div>${note}</div>`).join('')}
             </div>
             `).join('')}
@@ -531,6 +534,8 @@ function createInfoBox(info) {
         <div class="scale-row">
             ${info.scale.map(note => `<div class="scale-note">${note}</div>`).join('')}
         </div>
+
+        <div class="info-seq-number">${infoBoxCounter}</div>
     `;
 
     // Delete button event
@@ -538,45 +543,46 @@ function createInfoBox(info) {
         box.remove();
     });
 
-    // Drag & drop handlers
-    box.addEventListener('dragstart', () => {
-        box.classList.add('dragging');
-    });
+//     // // Drag & drop handlers
+//     // box.addEventListener('dragstart', () => {
+//     //     box.classList.add('dragging');
+//     // });
 
-    box.addEventListener('dragend', () => {
-        box.classList.remove('dragging');
-    });
+//     // box.addEventListener('dragend', () => {
+//     //     box.classList.remove('dragging');
+//     // });
 
     return box;
 }
 
-container.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    const dragging = document.querySelector('.dragging');
-    const afterElement = getDragAfterElement(container, e.clientY);
-    if (afterElement == null) {
-        container.appendChild(dragging);
-    } else {
-        container.insertBefore(dragging, afterElement);
-    }
-});
+// container.addEventListener('dragover', (e) => {
+//     e.preventDefault();
+//     const dragging = document.querySelector('.dragging');
+//     const afterElement = getDragAfterElement(container, e.clientY);
+//     if (afterElement == null) {
+//         container.appendChild(dragging);
+//     } else {
+//         container.insertBefore(dragging, afterElement);
+//     }
+// });
 
-function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll('.info-box:not(.dragging)')];
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child };
-        } else {
-            return closest;
-        }
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
+// function getDragAfterElement(container, y) {
+//     const draggableElements = [...container.querySelectorAll('.info-box:not(.dragging)')];
+//     return draggableElements.reduce((closest, child) => {
+//         const box = child.getBoundingClientRect();
+//         const offset = y - box.top - box.height / 2;
+//         if (offset < 0 && offset > closest.offset) {
+//             return { offset: offset, element: child };
+//         } else {
+//             return closest;
+//         }
+//     }, { offset: Number.NEGATIVE_INFINITY }).element;
+// }
 
 document.getElementById('clear-btn').addEventListener('click', () => {
     const container = document.getElementById('info-container');
     container.innerHTML = ''; // Clear all child elements
+    infoBoxCounter = 0;
 });
 ////////////////
 
