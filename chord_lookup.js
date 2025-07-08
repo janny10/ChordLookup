@@ -477,7 +477,7 @@ const generateChordInfo = function(chordName, major = true) {
 ////////// Mostly generated code below
 const input = document.getElementById('textInput');
 const submitBtn = document.getElementById('submitButton');
-const realTimeCheckbox = document.getElementById('realTimeCheckbox');
+//const realTimeCheckbox = document.getElementById('realTimeCheckbox');
 const container = document.getElementById('info-container');
 
 input.addEventListener("keydown", function (event) {
@@ -492,17 +492,17 @@ submitBtn.addEventListener('click', () => {
     container.appendChild(createInfoBox(info));
 });
 
-realTimeCheckbox.addEventListener('change', () => {
-    if (realTimeCheckbox.checked) {
-    input.addEventListener('input', realTimeListener);
-    } else {
-    input.removeEventListener('input', realTimeListener);
-    }
-});
+// realTimeCheckbox.addEventListener('change', () => {
+//     if (realTimeCheckbox.checked) {
+//     input.addEventListener('input', realTimeListener);
+//     } else {
+//     input.removeEventListener('input', realTimeListener);
+//     }
+// });
 
-function realTimeListener() {
-    //foo(input.value);
-}
+// function realTimeListener() {
+//     //foo(input.value);
+// }
 
 function createInfoBox(info) {
     const box = document.createElement('div');
