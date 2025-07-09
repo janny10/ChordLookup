@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Chord Lookup App</title>
+    <meta charset="UTF-8">
+    <title>Chord Lookup App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 html, body {
     margin: 0;
@@ -11,46 +12,47 @@ html, body {
     background-color: #121212;
     color: #e0e0e0;
     font-family: Arial, sans-serif;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    font-size: 16px;
 }
 
 .input-group {
-    margin: 10px 20px 0 20px;
+    margin: 8px 12px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+    gap: 6px;
 }
 
 input[type="text"] {
     background-color: #2c2c2c;
     color: #f0f0f0;
     border: 1px solid #555;
-    padding: 12px;
+    padding: 8px 10px;
     border-radius: 4px;
-    flex: 1 1 100%;
-    font-size: 16px;
-    min-width: 0;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .button-row {
     display: flex;
     gap: 8px;
     width: 100%;
-    box-sizing:border-box;
-    margin: 12px 0 0 0;
+}
+
+#submitButton, #clear-btn {
+    padding: 10px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    flex: 1;
 }
 
 #submitButton {
-    flex: 4;
-    padding: 12px 16px;
     background-color: #1976d2;
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
 }
 
 #submitButton:hover {
@@ -58,14 +60,8 @@ input[type="text"] {
 }
 
 #clear-btn {
-    flex: 1;
-    padding: 12px 16px;
     background-color: #e53935;
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
 }
 
 #clear-btn:hover {
@@ -76,33 +72,27 @@ input[type="text"] {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
     overflow-y: auto;
-    padding: 20px;
+    padding: 8px 12px;
+    box-sizing: border-box;
 }
 
 .info-box {
     border: 1px solid #333;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 12px;
     background-color: #1e1e1e;
     position: relative;
-    color: #e0e0e0;
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 20px;
-    line-height: 1.5;
-}
-
-.info-box.dragging {
-    opacity: 0.5;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
 }
 
 .info-seq-number {
     position: absolute;
     bottom: 6px;
     right: 8px;
-    font-size: 16px;
+    font-size: 0.85rem;
     color: #888;
     user-select: none;
     pointer-events: none;
@@ -111,8 +101,8 @@ input[type="text"] {
 .voicings {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
+    gap: 6px;
+    margin-top: 6px;
 }
 
 .voicing-column {
@@ -121,7 +111,7 @@ input[type="text"] {
     padding: 4px;
     border-radius: 4px;
     box-sizing: border-box;
-    min-width: 0; /* prevent overflow in flex container */
+    min-width: 0;
 }
 
 .voicing-column.fit-bg {
@@ -140,29 +130,29 @@ input[type="text"] {
     padding: 4px 6px;
     border-bottom: 1px solid #444;
     color: #cfd8dc;
-    font-size: 24px;
+    font-size: 1.1rem;
 }
 
 .scale-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
+    gap: 5px;
+    margin-top: 6px;
 }
 
 .scale-note {
     background: #388e3c;
     color: #ffffff;
-    padding: 5px 8px;
+    padding: 4px 7px;
     border-radius: 3px;
     white-space: nowrap;
-    font-size: 24px;
+    font-size: 1.1rem;
 }
 
 .label {
     font-weight: bold;
     color: #90caf9;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 .delete-btn {
@@ -171,7 +161,7 @@ input[type="text"] {
     right: 8px;
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 1rem;
     cursor: pointer;
     color: #ef5350;
 }
@@ -182,28 +172,23 @@ input[type="checkbox"] {
 
 label {
     color: #b0bec5;
+    font-size: 1rem;
 }
 </style>
 </head>
 <body>
-  <div class="input-group">
-    <label for="textInput">Enter chord name:</label>
-    <input type="text" id="textInput" />
-    <div class="button-row">
-        <button id="submitButton">Submit</button>
-        <button id="clear-btn">Clear Info Boxes</button>
+    <div class="input-group">
+        <label for="textInput">Enter chord name:</label>
+        <input type="text" id="textInput" />
+        <div class="button-row">
+            <button id="submitButton">Submit</button>
+            <button id="clear-btn">Clear Info Boxes</button>
+        </div>
     </div>
-  </div>
 
-  <!-- <div class="input-group">
-    <input type="checkbox" id="realTimeCheckbox" />
-    <label for="realTimeCheckbox">Real Time</label>
-  </div> -->
+    <div class="container" id="info-container">
+    </div>
 
-  <div class="container" id="info-container">
-  <!-- Info boxes will be inserted here -->
-  </div>
-
-  <script src="chord_lookup.js"></script>
+    <script src="chord_lookup.js"></script>
 </body>
 </html>
