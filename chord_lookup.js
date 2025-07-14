@@ -190,7 +190,12 @@ const altParser = function(alts) {
         for (const validAlt of validAlts) {
             if (alts.startsWith(validAlt)) {
                 if (!parsedAlts.includes(validAlt)) {
-                    parsedAlts.push(validAlt);
+                    // TODO: maybe dont sub all #11 for b5..
+                    if (validAlt == '#11') {
+                        parsedAlts.push('b5');
+                    } else {
+                        parsedAlts.push(validAlt);
+                    }
                 }
                 alts = alts.slice(validAlt.length);
                 matched = true;
@@ -294,7 +299,7 @@ const generateChordInfo = function(chordName, major = true) {
     const key = keyAndModeAlts[0];
     const modeAndAlts = modeParser(keyAndModeAlts[1]);
     if (modeAndAlts == null) return null;
-    const mode = modeAndAlts[0];
+    let mode = modeAndAlts[0];
     const alts = altParser(modeAndAlts[1]);
     if (alts == null) return null;
 
@@ -303,16 +308,16 @@ const generateChordInfo = function(chordName, major = true) {
     if (alts.includes('b5')) {
         if (mode == 'dom7' || mode == 'min7') {
             mode += 'b5';
-            alts.index = alts.indexOf('b5');
-            alts.splice(index, index);
+            const index = alts.indexOf('b5');
+            alts.splice(index, 1);
         }
     }
 
     if (alts.includes('#9')) {
         if (mode != 'dom7') return null;
         mode += '#9';
-        alts.index = alts.indexOf('#9');
-        alts.splice(index, index);
+        const index = alts.indexOf('#9');
+        alts.splice(index, 1);
     }
 
     // no alts on altered chords
@@ -420,8 +425,9 @@ const generateChordInfo = function(chordName, major = true) {
             needsNewScale = true
             modeNum = 7
         } else if (modeSlice == 'b5') {
-            basicMode = 'halfDim'
-            modeNum = 6
+            modeNum = 4
+            basicMode = 'lydian dom'
+            majorMode = false
             needsNewScale = true
         } else {
             basicMode = 'mixolydian'
@@ -457,7 +463,7 @@ const generateChordInfo = function(chordName, major = true) {
     let hackKey = key.charAt(0).toUpperCase() + key.slice(1);
     altKey = altKey.charAt(0).toUpperCase() + altKey.slice(1);
     scale = scale.map(note => note.charAt(0).toUpperCase() + note.slice(1));
-    let majorOrMinorStr = majorMode ? 'major' : 'minor'
+    let majorOrMinorStr = majorMode ? 'major' : 'melodic minor'
     // input, interp_key, voicings, scaleName, scale
     let info = {
         'input': chordName,
@@ -534,7 +540,7 @@ function createInfoBox(info) {
         <div class="scale-row">
             ${info.scale.map(note => `<div class="scale-note">${note}</div>`).join('')}
         </div>
-
+        <div>(pardon the spelling)</div>
         <div class="info-seq-number">${infoBoxCounter}</div>
     `;
 
